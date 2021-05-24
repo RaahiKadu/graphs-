@@ -9,7 +9,7 @@ class Node //person class
     Node left=null;
     Node right=null;
     String name,telephone;
-    int h;                          //height
+    int h;                          
     Node(String n,String t)         
     {
         name=n;
@@ -23,20 +23,20 @@ class Node //person class
         h=0;
     }
 }
-class AVL //record of numbers 
+class AVL 
 {
     Node root;
     AVL()
     {
         root=null;
     }
-    int height(Node n)              //height to calculate balance factor of tree
+    int height(Node n)              
     {
         if (n == null)
             return 0;
         return n.h;
     }
-    int max(int a, int b)           //function further used to return max of two nums
+    int max(int a, int b)           
     {
         return (a > b) ? a : b;
     }
@@ -49,7 +49,7 @@ class AVL //record of numbers
         return (height(N.left) - height(N.right));
     } 
     
-    int ASCII(char c)               //function to convert char to ascii value
+    int ASCII(char c)               
     {
         return (int) c;
     }
@@ -105,13 +105,9 @@ class AVL //record of numbers
         if (root == null)
             return temp;
             
-        for(int i=0;i<temp.name.length();i++)           //incase first few letters of name are same
+        for(int i=0;i<temp.name.length();i++)          
         {   
-            /*int j=i+1;
-            if(j>root.name.length())
-            {
-                
-            }*/
+            
             if(ASCII(temp.name.charAt(i)) == ASCII(root.name.charAt(i)))   
             {
 
@@ -146,58 +142,17 @@ class AVL //record of numbers
             }
           
         }
-        if(flag==0)                                     //if names are exactly same
+        if(flag==0)                                     
         {
             return root;
         }
      
-        root.h = max(height(root.left),height(root.right));   //update height after insertion
+        root.h = max(height(root.left),height(root.right));   
         return root;
-        /*balance=balanceFactor(root);
         
-        //cases 
-        flag=0;
-        for(int i=0;i<temp.name.length();i++)           //incase multiple letters match
-        {
-            if (balance > 1 && ASCII(temp.name.charAt(i)) < ASCII(root.left.name.charAt(i))) //LL case
-            {   
-                //break;
-                flag=1;
-                return RR(root);
-            }    
-            else if (balance < -1 && ASCII(temp.name.charAt(i)) > ASCII(root.left.name.charAt(i))) //RR case
-            {   
-                //break;
-                flag=1;
-                return LL(root);
-            }  
- 
-            else if (balance > 1 && ASCII(temp.name.charAt(i)) > ASCII(root.left.name.charAt(i))) //LR
-            {   
-                flag=1;
-                return RL(root);
-            }
- 
-            else if (balance < -1 && ASCII(temp.name.charAt(i)) < ASCII(root.left.name.charAt(i))) //RL
-            {   
-                flag=1;
-                return LR(root);
-            }
-            
-            else                                                //incase first letters match, continue loop
-            {
-                
-            }
-            
-        }
-        if(flag==0)
-        {   
-            return root;
-        } 
-     return root;*/                        //statement not reachable because node will be returned in one of the cases
     }
     
-    void create()                        //Accept general information form customer
+    void create()                        
     {
         Scanner sc=new Scanner(System.in);
         String name, telephone;
@@ -216,7 +171,7 @@ class AVL //record of numbers
         while(ans=='y'||ans=='Y');
     }
     
-    void display(Node node)             //Inorder traversal,L-N-R
+    void display(Node node)             
     {
         if (node == null)
         { 
@@ -260,10 +215,7 @@ public class Main
 	    		 break;
 	    	}
 	    }while(choice != 0);
-	    /*record.create();
-	    System.out.println("*****CONTACTS*****");
-	    record.display(record.root);
-	    System.out.println("************");*/
+	    
 	}
 }
 /*
