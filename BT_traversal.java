@@ -1,4 +1,4 @@
-import java.util.LinkedList;
+wimport java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack; 
@@ -33,6 +33,9 @@ class bt{
             d = sc.nextInt();
             //create node
             node temp= new node(d);
+		
+		
+		
             
             //btree is empty
             if(root==null){
@@ -308,3 +311,4 @@ public class Main{
         }while (op!=9);
 	}
 }
+
