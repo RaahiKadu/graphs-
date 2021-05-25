@@ -375,6 +375,8 @@ Distance:1
 DFS :
 1 4 3 2 
 
-
+TIME COMPLEXITIES
+ADJLIST (BFS DFS)-O(V+E)
+ADJ MATRIX -O(V^2)
 
 */
