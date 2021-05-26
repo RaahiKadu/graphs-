@@ -1,382 +1,438 @@
-/*
-Raahi Kadu 
-C22019221361
-assignment 4
-*/
-package graph;
 import java.util.*;
 class node
 {
-	int house;
-	int dist;
-	node next;
-	
-	node()
-	{
-		house=0;
-		next=null;
-	}
-	
-	node(int house,int dist)
-	{
-		this.house=house;
-		this.dist=dist;
-	}
-	
-        node(int house)
-        {
-            this.house=house;
-        }
-	void display()
-	{
-		System.out.println("House Number:"+house);
-		System.out.println("Distance:"+dist);
-	}
+    int house; //house no.
+    node next;
+    node()
+    {
+        house=0;
+        next=null;
+    }
+    node(int a)
+    {
+        house=a;
+    }
+    void display_details()
+    {
+        System.out.print("house no."+house);
+    }
 }
-
-class grh
-{
-	int v;
-	int e;
-	int adjMat[][];
-	node head[];
-	
-	grh()
-	{
-		v=0;
-		e=0;
-	}
-
-	void adjmat()
-	{
-		Scanner sc=new Scanner(System.in);
-		System.out.println("\nEnter the number of vertices");
-		v=sc.nextInt();
-		System.out.println("Enter the adjacency matrix");
-		adjMat=new int[v][v];
-		for(int i=0;i<v;i++)
-		{
-			for(int j=0;j<v;j++)
-			{
-				System.out.println("Enter the value for ("+(i+1)+","+(j+1)+")");
-				adjMat[i][j]=sc.nextInt();
-			}
-		}
-		
-	}
-	
-	void adjlist()
-	{
-		Scanner sc=new Scanner(System.in);
-		System.out.println("\nEnter the number of vertices");
-		v=sc.nextInt();
-		System.out.println("\nEnter the number of Edges");
-		e=sc.nextInt();
-		head=new node[v];
-		for(int i=0;i<v;i++)
-		{
-			head[i]=new node();
-			head[i]=null;
-		}
-		
-		for(int i=0;i<e;i++)
-		{
-			System.out.println("Enter the source:");
-			int source=sc.nextInt();
-			System.out.println("Enter the destination:");
-			int dest=sc.nextInt();
-			System.out.println("\n\tEnter the distance");
-			int dist = sc.nextInt();
-			insert(source,dest,dist);
-			insert(dest,source,dist);
-		}
-	}
-	
-	void insert(int source,int dest,int dist)
-	{
-		node temp=new node(dest,dist);
-		if(head[source-1]==null)
-		{
-			head[source-1]=temp;
-		}
-		
-		else
-		{ 
-			node ptr=head[source-1];
-			
-			while(ptr.next!=null)
-			{
-                            ptr=ptr.next;
-				
-			}
-                        ptr.next=temp;
-		}
-	}
-        
-        void dispadjmat()
+class graph 
+{   
+   Scanner sc=new Scanner(System.in) ;   
+   int v;       //vertices
+   int e;       //edges
+   int[][] adj_m;    //adjacency matrix
+   node head_list[]=new node[20];       //head f LL storing house details
+   graph()
+   {
+       v=e=0;
+   }
+   
+   void create_adj_m()
+   {
+       System.out.println("enter no. of vertices");
+       v=sc.nextInt();
+       adj_m=new int[v][v];
+       System.out.println("enter Adjacency Matrix");
+       for(int i=0;i<v;i++)
+       {
+          for(int j=0;j<v;j++)
+         {
+           if( j>=i)
+           {
+               System.out.println("Enter (1/0) for adj matrix of houses "+ (i+1)+", "+(j+1));
+               adj_m[j][i]=adj_m[i][j]=sc.nextInt();
+           }
+         } 
+       }
+   }
+   
+   void display_adj_m()
+   {    
+       System.out.print("   ");
+       for(int x=0;x<v;x++)
         {
-            for(int i=0;i<v;i++)
-            {
-                for(int j=0;j<v;j++)
-                {
-                    System.out.print(adjMat[i][j]+"\t");
-                }
-                System.out.println();
-            }
+            System.out.print((x+1)+"\t");
         }
-        
-        void dispadjlist()
-        {
-            for(int i=0;i<v;i++)
-            {
-                System.out.println("From house number"+(i+1)+": ");
-                if(head[i]==null)
-                {
-                    System.out.println("\nEmpty"); 
-                }
-                else
-                {
-                    node ptr=head[i];
-                    while(ptr!=null)
-                    {
-                        ptr.display();
-                        ptr=ptr.next;
-                    }
-                }
-                System.out.println();
-            }
+       System.out.println();
+       for(int i=0;i<v;i++)
+       {    
+          System.out.print(i+1+": "); 
+          for(int j=0;j<v;j++)
+         {
+           System.out.print(adj_m[i][j]+"\t");
+         }
+         System.out.println();
+       }
+   }
+   void bfs()               //using queue
+   {
+       System.out.println("Enter starting house no.");
+       int start=sc.nextInt();
+       boolean visited[]=new boolean[v];             //linear boolean matrix to show visited vertices
+       visited[start-1]=true;                       //always visits the start node
+       Queue<Integer> q=new LinkedList<Integer>();
+       q.add(start);
+       while(!q.isEmpty())
+       {
+           int a= q.poll();
+           System.out.print(a+"->");
+           for(int j=0;j<v;j++)
+           {
+               if(adj_m[a-1][j]==1&&visited[j]==false)
+               {
+                   q.add(j+1);
+                   visited[j]=true;
+               }
+           }
+       }
+       System.out.print("end");
+   }
+   void dfs()               //using stack
+   {    
+       int flag=0,j;
+       System.out.println();
+       System.out.println("Enter starting house no.");
+       int start=sc.nextInt();
+       boolean visited[]=new boolean[v];             //linear boolean matrix to show visited vertices
+       boolean printed[]=new boolean[v]; 
+       visited[start-1]=true;                       //always visits the start node
+       Stack<Integer> s=new Stack<Integer>();
+       s.push(start);
+       while(!s.isEmpty())
+       {
+            
+        int a=s.peek(); 
+        if(visited[a-1]==true&&printed[a-1]==false)  
+                 System.out.print(a+"->");
+                 printed[a-1]=true;
+        for(j=0;j<v;j++)
+           {    
+               flag=0;
+               
+               if(adj_m[a-1][j]==1&&visited[j]==false)
+               {
+                   visited[j]=true;
+                   flag=1;
+                   s.push(j+1);
+                   break;
+               }
+           }
+          if(flag==0)
+          {
+              s.pop();
+          }
+       }
+        System.out.print("end");
+   }
+   
+   void accept_list()
+   {
+       int source,destination;
+       int j;
+       char ans;
+       System.out.println("enter no. of vertices");
+       v=sc.nextInt();
+       System.out.println("enter no. of edges");
+       e=sc.nextInt();
+       for(int i=0;i<v;i++)
+       {
+           head_list[i]=new node();
+           head_list[i]=null;
+       }
+       for(int i=0;i<e;i++)
+       {
+           System.out.println((i+1)+"\n"+"enter source");
+           source=sc.nextInt();
+           System.out.println("enter destination");
+           destination=sc.nextInt();
+           insert(source,destination);
+           insert(destination,source);
+       }
+   } 
+       
+    void display_list()
+    {
+        //display list
+       node ptr2=new node();
+       for(int i=0;i<v;i++)
+       {    
+           System.out.print("house no. " +(i+1)+"-");
+           ptr2=head_list[i];
+           while(ptr2!=null)
+           {
+              	ptr2.display_details();
+              	System.out.print("-");
+              	ptr2=ptr2.next;
+           }
+           System.out.println("end");
+       } 
+       
+   }
+   void insert(int i,int d)
+    {   
+        node temp=new node(d);
+        if(head_list[i-1]==null)
+        {  
+          head_list[i-1]=temp;
         }
-        
-        void bfs()
+        else 
         {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("\n\tEnter the starting vertex");
-            int start = sc.nextInt();
-            boolean[] visited = new boolean[v]; 
-            visited[start - 1] = true;
-            Queue<Integer> q=new LinkedList<Integer>();
-            q.add(start); 
-            while(!q.isEmpty())
+            node ptr=head_list[i-1];
+            while(ptr.next!=null)
             {
-                int a=q.poll();
-                System.out.print(a+" ");
-                for(int i=0;i<v;i++)
-                {
-                    if(adjMat[a-1][i]==1 && visited[i]==false)
-                    {
-                        q.add(i+1);
-                        visited[i]=true;
-                    }
-                }
+             ptr=ptr.next;
             }
+            ptr.next=temp;
         }
-        
-        void dfs()
-        {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("\n\tEnter the starting vertex");
-            int start=sc.nextInt();
-            //node temp=new node(start);
-            boolean[] visited = new boolean[v]; 
-            visited[start - 1] = true;
-            Stack<Integer> s=new Stack<Integer>();
-            s.push(start);
-            while(!s.empty())
-            {
+    }
+    
+   
+   void bfs_list()
+   {
+       System.out.println("Enter starting house no.");
+       int start=sc.nextInt();
+       node ptr=new node();
+       boolean visited[]=new boolean[v];
+       visited[start-1]=true;
+       Queue<Integer> q=new LinkedList<Integer>();
+       q.add(start);
+       while(!q.isEmpty())
+       {
+           int a=q.poll();
+           //node temp=new node(a);
+           System.out.print("house no."+a+"-> ");
+           int i=a;
+           ptr=head_list[i-1];
+           while(ptr!=null)
+               {  
+                 i=ptr.house; 
+                 if(visited[i-1]==false)
+                 {
+                    q.add(i);
+                    visited[i-1]=true;
+                 }
+                 
+                 ptr=ptr.next; 
+                 
+               }
+           
+       }System.out.println("end");
+   }
+   
+   void dfs_list()
+   {
+       System.out.println("\nEnter starting house no.");
+       int start=sc.nextInt();
+       node ptr=new node();
+       boolean visited[]=new boolean[v];
+       boolean printed[]=new boolean[v];
+       visited[start-1]=true;
+       Stack<Integer>s=new Stack<Integer>();
+       s.push(start);
+       while(!s.empty())
+       {
                 int a=s.pop();
-                System.out.print(a+" ");
-                if(head[a-1].next!=null)
+                if(printed[a-1]==false)
                 {
-                    node ptr=head[a-1];
-                   while(ptr!=null )
+                    System.out.print("house no."+a+"-> ");
+                    printed[a-1]=true;
+                }
+                
+                ptr=head_list[a-1];
+                if(ptr.next!=null)
+                {
+                   node temp=head_list[a-1];
+                   while(temp!=null )
                    {
                        
-                       if(visited[(ptr.house-1)]==false)
+                       if(visited[(temp.house-1)]==false)
                        {
-                           s.push(ptr.house);
+                           s.push(temp.house);
                             int v=ptr.house;
                             visited[v-1]=true;
                        }
-                       ptr=ptr.next;
+                       temp=temp.next;
                    }
                     
                 }
-            }
-        }
+           
+           
+       }System.out.println("end");
+   }
 }
-public class Graph 
+public class Main
 {
-    public static void main(String srgs[])
-    {
-        Scanner sc=new Scanner(System.in);
-        int ch=0;
-        grh g=new grh();
-        do
-        {
-            System.out.println("\n\tChoose any 1 option");
-            System.out.println("\n\t1.Adjacency Matrix");
-            System.out.println("\n\t2.Adjacency List");
-            System.out.println("\n\t3.Exit");
+	public static void main(String[] args) 
+	{   
+	    int ch;
+	    Scanner sc=new Scanner(System.in);
+	    graph g=new graph();
+	    do
+	    {
+        System.out.println("***MENU***");
+        System.out.println("\n1.Adjacency Matrix");
+        System.out.println("\n2.Adjacency List");
+        System.out.println("\n3.Exit");
+            System.out.println("\nChoose any 1 option");
             ch = sc.nextInt();
             switch(ch)
             {
                 case 1:
-                        g.adjmat();
-                        System.out.println("\n\tDisplay:");
-                        g.dispadjmat();
-                        System.out.println("BFS : ");
-                        g.bfs();
-                        break;
-                    
+                    g.create_adj_m();
+                    g.display_adj_m();
+                    do{
+                    System.out.println("\nChoose any 1 option\n1.bfs\n2.dfs");
+                    int opt = sc.nextInt();
+                    if(opt==1)
+                    {
+                       g.bfs(); 
+                    }
+                    else if(opt==2)
+                    {
+                       g.dfs();
+                    }
+                    }while(opt!=3)
+                break;    
+                
                 case 2:
-                        g.adjlist();
-                        System.out.println("\n\tDisplay:");
-                        g.dispadjlist();
-                        System.out.println("DFS : ");
-                        g.dfs();
-                        break;
+                    g.accept_list();
+                    g.display_list(); 
+                    do{
+                    System.out.println("\nChoose any 1 option\n1.bfs\n2.dfs");
+                    int opt2 = sc.nextInt();
+                    if(opt2==1)
+                    {
+                       g.bfs_list(); 
+                    }
+                    else if(opt2==2)
+                    {
+                       g.dfs_list();
+                    }
+                    while(opt2!=3)
+                break;
+                
                 case 3:
-                        System.exit(0);
+                System.out.println("EXIT");    
             }
         }while(ch!=3);
-    }
+	}
 }
 
 /*
-OUTPUT:
-run:
+***MENU***
 
-	Choose any 1 option
+1.Adjacency Matrix
 
-	1.Adjacency Matrix
+2.Adjacency List
 
-	2.Adjacency List
+3.Exit
 
-	3.Exit
+Choose any 1 option
 1
+enter no. of vertices
+5
+enter Adjacency Matrix
+Enter (1/0) for adj matrix of houses 1, 1
+0
+Enter (1/0) for adj matrix of houses 1, 2
+1
+Enter (1/0) for adj matrix of houses 1, 3
+0
+Enter (1/0) for adj matrix of houses 1, 4
+1
+Enter (1/0) for adj matrix of houses 1, 5
+0
+Enter (1/0) for adj matrix of houses 2, 2
+0
+Enter (1/0) for adj matrix of houses 2, 3
+1
+Enter (1/0) for adj matrix of houses 2, 4
+1
+Enter (1/0) for adj matrix of houses 2, 5
+0
+Enter (1/0) for adj matrix of houses 3, 3
+0
+Enter (1/0) for adj matrix of houses 3, 4
+1
+Enter (1/0) for adj matrix of houses 3, 5
+0
+Enter (1/0) for adj matrix of houses 4, 4
+0
+Enter (1/0) for adj matrix of houses 4, 5
+1
+Enter (1/0) for adj matrix of houses 5, 5
+0
+   1	2	3	4	5	
+1: 0	1	0	1	0	
+2: 1	0	1	1	0	
+3: 0	1	0	1	0	
+4: 1	1	1	0	1	
+5: 0	0	0	1	0	
 
-Enter the number of vertices
+Choose any 1 option
+1.bfs
+2.dfs
+1
+Enter starting house no.
+2
+2->1->3->4->5->end
+Choose any 1 option
+2
+enter no. of vertices
+5
+enter no. of edges
+5
+1
+enter source
+1
+enter destination
+2
+2
+enter source
+1
+enter destination
 4
-Enter the adjacency matrix
-Enter the value for (1,1)
-0
-Enter the value for (1,2)
-1
-Enter the value for (1,3)
-0
-Enter the value for (1,4)
-1
-Enter the value for (2,1)
-1
-Enter the value for (2,2)
-0
-Enter the value for (2,3)
-0
-Enter the value for (2,4)
-0
-Enter the value for (3,1)
-0
-Enter the value for (3,2)
-1
-Enter the value for (3,3)
-0
-Enter the value for (3,4)
-1
-Enter the value for (4,1)
-1
-Enter the value for (4,2)
-0
-Enter the value for (4,3)
-1
-Enter the value for (4,4)
-0
+3
+enter source
+3
+enter destination
+2
+4
+enter source
+2
+enter destination
+4
+5
+enter source
+4
+enter destination
+5
+house no. 1-house no.2-house no.4-end
+house no. 2-house no.1-house no.3-house no.4-end
+house no. 3-house no.2-end
+house no. 4-house no.1-house no.2-house no.5-end
+house no. 5-house no.4-end
 
-	Display:
-0	1	0	1	
-1	0	0	0	
-0	1	0	1	
-1	0	1	0	
-
-	Enter the starting vertex
-1
-BFS :
-1 2 4 3 
-	Choose any 1 option
-
-	1.Adjacency Matrix
-
-	2.Adjacency List
-
-	3.Exit
+Choose any 1 option
+1.bfs
+2.dfs
 2
 
-Enter the number of vertices
-4
-
-Enter the number of Edges
-4
-Enter the source:
-1
-Enter the destination:
+Enter starting house no.
 2
+house no.2-> house no.4-> house no.5-> house no.3-> house no.1-> end
 
-	Enter the distance
-1
-Enter the source:
-2
-Enter the destination:
+Choose any 1 option
 3
 
-	Enter the distance
-1
-Enter the source:
-3
-Enter the destination:
-4
+EXIT
 
-	Enter the distance
-1
-Enter the source:
-4
-Enter the destination:
-1
+TIME COMPLEXITIES 
 
-	Enter the distance
-1
+DFS bfs -O(n) 
 
-	Display:
-From house number1: 
-House Number:2
-Distance:1
-House Number:4
-Distance:1
-
-From house number2: 
-House Number:1
-Distance:1
-House Number:3
-Distance:1
-
-From house number3: 
-House Number:2
-Distance:1
-House Number:4
-Distance:1
-
-From house number4: 
-House Number:3
-Distance:1
-House Number:1
-Distance:1
-
-
-	Enter the starting vertex
-1
-DFS :
-1 4 3 2 
-
-TIME COMPLEXITIES
-ADJLIST (BFS DFS)-O(V+E)
-ADJ MATRIX -O(V^2)
+ accept display -O(n^2)
 
 */
